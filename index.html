@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=2.0" />
+    <title>Telemedicine Connect</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://img.freepik.com/free-photo/health-still-life-with-copy-space_23-2148854031.jpg?t=st=1743869743~exp=1743873343~hmac=0fae824f5c1a43ccc008caf748e90da9d278325445ac494fcb480ca1bea0c599&w=1380') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        #resources-result {
+            color: #007B5E;
+            /* Dark green */
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+
+        header {
+            background-color: #2b7a78cc;
+            color: #fff;
+            padding: 30px 20px 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background-color: #3aafa9cc;
+        }
+
+        nav ul li {
+            margin: 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 18px;
+            display: inline-block;
+        }
+
+        nav ul li a:hover {
+            background-color: #17252a;
+            border-radius: 5px;
+        }
+
+        section {
+            padding: 30px;
+            background-color: #ffffffdd;
+            margin: 30px auto;
+            max-width: 1000px;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #ffffffdd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        button {
+            background-color: #3aafa9;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2b7a78;
+        }
+
+        .message {
+            color: red;
+            font-size: 14px;
+        }
+
+        footer {
+            background-color: #17252a;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        header,
+        nav,
+        #diagnosis,
+        #medication,
+        #consultation,
+        #dashboard,
+        #resources,
+        footer {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-wrapper">
+        <section id="login" class="auth-container">
+            <h2>Telemedicine Connect</h2>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email" required />
+                <input type="password" id="password" placeholder="Password" required />
+                <button type="submit">Log In</button>
+            </form>
+            <div class="toggle">
+                Don't have an account? <a id="toggleToSignup" style="cursor:pointer; color:#2b7a78;">Sign up</a>
+            </div>
+            <div class="message" id="login-message"></div>
+        </section>
+
+        <section id="signup" class="auth-container" style="display:none;">
+            <h2>Telemedicine Connect</h2>
+            <form id="registerForm">
+                <input type="email" id="reg-email" placeholder="Email" required />
+                <input type="password" id="reg-password" placeholder="Password" required />
+                <button type="submit">Sign Up</button>
+            </form>
+            <div class="toggle">
+                Already have an account? <a id="toggleToLogin" style="cursor:pointer; color:#2b7a78;">Log in</a>
+            </div>
+            <div class="message" id="register-message"></div>
+        </section>
+    </div>
+
+    <header>
+        <h1>Telemedicine Connect</h1>
+        <nav>
+            <ul>
+                <li><a href="#dashboard">Health Dashboard</a></li>
+                <!-- <li><a href="#diagnosis">Symptom Checker</a></li> -->
+                <li><a href="#Yoga">Yoga Tracker</a></li>
+                <li><a href="#consultation">Teleconsultation</a></li>
+                <li><a href="#resources">Local Health Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="dashboard">
+        <!-- <h2>Health Dashboard</h2>
+        <p>Visualize your vitals and health history. AI-generated insights help track and understand health trends over
+            time.</p>
+
+        <div style="margin-top: 20px;">
+            <select id="metric-select">
+                <option value="">Select Health Metric</option>
+                <option value="blood_pressure">Blood Pressure</option>
+                <option value="heart_rate">Heart Rate</option>
+                <option value="blood_sugar">Blood Sugar</option>
+                <option value="oxygen_level">Oxygen Level</option>
+            </select>
+            <input type="date" id="start-date" />
+            <input type="date" id="end-date" />
+            <canvas id="healthChart" width="600" height="300" style="margin-top: 30px;"></canvas>
+
+            <button onclick="loadDashboard()">View Insights</button>
+        </div>
+
+        <div class="message" id="dashboard-result"></div>
+    </section> -->
+
+        <section id="diagnosis">
+            <h2>AI Symptom Checker</h2>
+            <p>Input symptoms like fever, rashes, breathing issues, or pain. Our AI models analyze and detect diseases
+                such
+                as Acne, Asthma, Dengue, Diabetes, or Heart Disease, and suggest possible treatments or consultation.
+            </p>
+            <div style="margin-top: 20px;">
+                <button onclick="window.location.href='heart_disease_ui.html'">Heart Disease Diagnosis</button>
+                <button onclick="window.location.href='daily_illness_ui.html'">Daily Illness Predictor</button>
+            </div>
+            
+        </section>
+
+        <section id="medication">
+            <h2>Yoga Class Booking</h2>
+            <p>Join live virtual yoga sessions to enhance your physical and mental well-being. Schedule your preferred
+                time and instructor.</p>
+
+            <form id="yogaBookingForm" style="margin-top: 20px;">
+                <input type="text" name="participant_name" id="participant_name" placeholder="Your Name" required />
+                <input type="date" name="class_date" id="class_date" required />
+                <select name="instructor" id="instructor" required>
+                    <option value="">Select Instructor</option>
+                    <option value="anita">Anita Sharma</option>
+                    <option value="rahul">Rahul Mehta</option>
+                    <option value="deepa">Deepa Verma</option>
+                </select>
+                <select name="class_type" id="class_type" required>
+                    <option value="">Select Class Type</option>
+                    <option value="beginner">Beginner Yoga</option>
+                    <option value="intermediate">Intermediate Flow</option>
+                    <option value="advanced">Advanced Power Yoga</option>
+                </select>
+                <button type="submit">Book Class</button>
+            </form>
+
+            <div class="message" id="yoga-booking-result" style="margin-top: 20px; font-weight: bold;"></div>
+
+            <!-- Video Session Section -->
+            <div id="yoga-video-section" style="display:none; margin-top: 20px;">
+                <h3>Your Yoga Session Link</h3>
+                <button onclick="startYogaSession()" style="padding: 10px 20px; font-weight: bold;">Join Yoga
+                    Session</button>
+            </div>
+
+            <!-- Schedule Section -->
+            <div id="yoga-schedule-section" style="margin-top: 40px;">
+                <h3>📅 Your Scheduled Sessions</h3>
+                <ul id="yoga-schedule-list" style="list-style: none; padding-left: 0;"></ul>
+            </div>
+        </section>
+
+        <script>
+            document.getElementById("yogaBookingForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                // Get form values
+                const name = document.getElementById("participant_name").value;
+                const date = document.getElementById("class_date").value;
+                const instructor = document.getElementById("instructor").options[document.getElementById("instructor").selectedIndex].text;
+                const classType = document.getElementById("class_type").options[document.getElementById("class_type").selectedIndex].text;
+
+                // Show booking message
+                const resultDiv = document.getElementById("yoga-booking-result");
+                resultDiv.innerText = `✅ Yoga class booked successfully for ${date}!`;
+                resultDiv.style.color = "green";
+
+                // Show video link section
+                document.getElementById("yoga-video-section").style.display = "block";
+
+                // Add to schedule
+                const scheduleList = document.getElementById("yoga-schedule-list");
+                const newItem = document.createElement("li");
+                newItem.innerHTML = `<strong>${classType}</strong> with <em>${instructor}</em> on <strong>${date}</strong> - for <strong>${name}</strong>`;
+                scheduleList.appendChild(newItem);
+
+                // Optionally reset form
+                document.getElementById("yogaBookingForm").reset();
+            });
+
+            function startYogaSession() {
+                window.open("https://your-yoga-session-link.com", "_blank");
+            }
+        </script>
+
+    </section>
+
+
+    <div class="message" id="yoga-result"></div>
+    </section>
+
+    <section id="consultation">
+        <h2>Teleconsultation Booking</h2>
+        <p>Connect with doctors remotely through video calls. Schedule appointments with calendar integration and
+            real-time availability.</p>
+    
+        <form id="bookingForm" style="margin-top: 20px;">
+            <input type="text" name="patient_name" id="patient_name" placeholder="Your Name" required />
+            <input type="date" name="appointment_date" id="appointment_date" required />
+            <select name="specialty" id="specialty" required>
+                <option value="">Select Specialty</option>
+                <option value="general">General Physician</option>
+                <option value="cardiologist">Cardiologist</option>
+                <option value="dermatologist">Dermatologist</option>
+                <option value="pulmonologist">Pulmonologist</option>
+            </select>
+            <button type="submit">Book Appointment</button>
+        </form>
+    
+        <div class="message" id="booking-result" style="margin-top: 20px;"></div>
+    
+        <!-- Video Call Section -->
+        <div id="video-call-section" style="display:none; margin-top: 20px;">
+            <h3>Your Teleconsultation Link</h3>
+            <button onclick="startVideoCall()" style="padding: 10px 20px; font-weight: bold;">Join Video Call</button>
+        </div>
+    
+        <!-- Bill Section -->
+        <div id="bill-section" style="display:none; margin-top: 30px; border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
+            <h3>🧾 Your Consultation Bill</h3>
+            <div id="bill-details" style="font-family: monospace;"></div>
+        </div>
+    
+        <!-- History Section -->
+        <div id="history-section" style="margin-top: 40px;">
+            <h3>📋 Previous Teleconsultations</h3>
+            <div id="history-list"></div>
+        </div>
+    </section>
+    
+    <script>
+        document.getElementById("bookingForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+    
+            // Get form values
+            const name = document.getElementById("patient_name").value;
+            const date = document.getElementById("appointment_date").value;
+            const specialtyDropdown = document.getElementById("specialty");
+            const specialty = specialtyDropdown.value;
+            const specialtyText = specialtyDropdown.options[specialtyDropdown.selectedIndex].text;
+    
+            // Define consultation cost based on specialty
+            const consultationFees = {
+                general: 300,
+                cardiologist: 500,
+                dermatologist: 400,
+                pulmonologist: 450
+            };
+            const cost = consultationFees[specialty] || 300;
+    
+            // Show booking result
+            document.getElementById("booking-result").innerText = `✅ Appointment booked with ${specialtyText} on ${date}`;
+            document.getElementById("booking-result").style.color = "green";
+    
+            // Show video call section
+            document.getElementById("video-call-section").style.display = "block";
+    
+            // Show and populate bill
+            const billHTML = `
+                Patient Name: ${name}<br>
+                Specialty: ${specialtyText}<br>
+                Appointment Date: ${date}<br>
+                Consultation Fee: ₹${cost}<br>
+                Total Amount: ₹${cost}
+            `;
+            document.getElementById("bill-details").innerHTML = billHTML;
+            document.getElementById("bill-section").style.display = "block";
+    
+            // Add to history
+            const historyItem = `<p>🗓️ <strong>${date}</strong> – ${specialtyText} for <em>${name}</em> | ₹${cost}</p>`;
+            document.getElementById("history-list").innerHTML += historyItem;
+    
+            // Reset form
+            document.getElementById("bookingForm").reset();
+        });
+    
+        function startVideoCall() {
+            window.open("https://your-teleconsultation-link.com", "_blank");
+        }
+    </script>
+    
+    <!-- Styles for history cards -->
+    <style>
+        .tele-card {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4CAF50;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .tele-card h4 {
+            margin: 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .tele-card p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .tele-card .rejoin-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: background-color 0.3s;
+        }
+
+        .tele-card .rejoin-link:hover {
+            background-color: #0056b3;
+        }
+
+        .icon {
+            font-size: 16px;
+            margin-right: 6px;
+            color: #4CAF50;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", loadHistory);
+
+        document.getElementById("bookingForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("patient_name").value;
+            const date = document.getElementById("appointment_date").value;
+            const specialty = document.getElementById("specialty").value;
+            const result = document.getElementById("booking-result");
+
+            if (name && date && specialty) {
+                const appointment = {
+                    name,
+                    date,
+                    specialty,
+                    videoLink: "https://meet.jit.si/TelehealthConsultationRoom",
+                    timestamp: new Date().toLocaleString()
+                };
+
+                // Save to local storage
+                let history = JSON.parse(localStorage.getItem("teleconsult-history")) || [];
+                history.unshift(appointment); // Add to beginning
+                localStorage.setItem("teleconsult-history", JSON.stringify(history));
+
+                result.innerHTML = `✅ Appointment booked for <strong>${name}</strong> on <strong>${date}</strong> with a <strong>${specialty}</strong>.`;
+                document.getElementById("video-call-section").style.display = "block";
+
+                loadHistory();
+            } else {
+                result.innerHTML = "⚠️ Please fill out all fields.";
+            }
+        });
+
+        function startVideoCall() {
+            window.open("https://meet.jit.si/TelehealthConsultationRoom", "_blank");
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem("teleconsult-history")) || [];
+            const historyList = document.getElementById("history-list");
+            historyList.innerHTML = "";
+
+            if (history.length === 0) {
+                historyList.innerHTML = "<p>No past appointments found.</p>";
+                return;
+            }
+
+            history.forEach((entry) => {
+                const div = document.createElement("div");
+                div.className = "tele-card";
+
+                div.innerHTML = `
+                    <h4><span class="icon">👤</span>${entry.name}</h4>
+                    <p><span class="icon">📅</span><strong>${entry.date}</strong> with <strong>${entry.specialty}</strong></p>
+                    <p><span class="icon">🕒</span>Booked on: ${entry.timestamp}</p>
+                    <a class="rejoin-link" href="${entry.videoLink}" target="_blank">🔗 Reopen Video Call</a>
+                `;
+
+                historyList.appendChild(div);
+            });
+        }
+    </script>
+
+
+    <section id="resources">
+        <h2>Local Health Resources</h2>
+        <p>Find nearby healthcare centers, pharmacies, emergency services, and community wellness programs tailored for
+            underserved areas.</p>
+
+        <h3>Select a Nearby Hospital</h3>
+
+        <label for="city-select"><strong>Choose City:</strong></label><br>
+        <select id="city-select" onchange="populateHospitals()">
+            <option value="">-- Select a City --</option>
+            <option value="jalgaon">Jalgaon</option>
+            <option value="nashik">Nashik</option>
+            <option value="pune">Pune</option>
+            <option value="aurangabad">Aurangabad</option>
+            <option value="dhule">Dhule</option>
+        </select><br><br>
+
+        <label for="hospital-select"><strong>Choose Hospital:</strong></label><br>
+        <select id="hospital-select">
+            <option value="">-- Select a Hospital --</option>
+        </select>
+
+        <div style="margin-top: 20px;">
+            <button onclick="showNearbyHospital()">Show My Nearby Hospital</button>
+        </div>
+
+        <div class="message" id="resources-result" style="margin-top: 15px; font-weight: bold;"></div>
+    </section>
+
+    <script>
+        const hospitalsByCity = {
+            jalgaon: [
+                "Sunrise Community Health Center - 12 Green Valley Road",
+                "Jeevan Jyoti Hospital - MG Road",
+                "LifeCare Clinic - Station Area",
+                "Healthy Roots Hospital - MIDC Zone",
+                "Vishwas Hospital - Ring Road"
+            ],
+            nashik: [
+                "Sanjeevani Pharmacy - Opp. Main Bus Stand",
+                "Ashoka Hospital - College Road",
+                "Apollo Clinic - CIDCO",
+                "Suman Hospital - Panchavati",
+                "Shri Clinic - Deolali Camp"
+            ],
+            pune: [
+                "Shree Hospital - Sector 5, Pimpri-Chinchwad",
+                "Ruby Hall Clinic - Sassoon Road",
+                "Sahyadri Hospital - Karve Nagar",
+                "Noble Hospital - Hadapsar",
+                "Columbia Asia - Kharadi"
+            ],
+            aurangabad: [
+                "Arogya Emergency Services - Ring Road",
+                "Manik Hospital - CIDCO",
+                "City Care Hospital - Osmanpura",
+                "Omega Clinic - Kranti Chowk",
+                "Galaxy Hospital - Garkheda"
+            ],
+            dhule: [
+                "Healthy Living Wellness Program - Zilla Parishad Complex",
+                "Sai Hospital - Subhash Nagar",
+                "Dr. Patil Clinic - Near Bus Stand",
+                "WellCare Hospital - MG Road",
+                "Shivam Hospital - Deopur"
+            ]
+        };
+
+        function populateHospitals() {
+            const city = document.getElementById("city-select").value;
+            const hospitalSelect = document.getElementById("hospital-select");
+            hospitalSelect.innerHTML = '<option value="">-- Select a Hospital --</option>';
+
+            if (hospitalsByCity[city]) {
+                hospitalsByCity[city].forEach(hospital => {
+                    const option = document.createElement("option");
+                    option.value = hospital;
+                    option.text = hospital;
+                    hospitalSelect.appendChild(option);
+                });
+            }
+        }
+
+        function showNearbyHospital() {
+            const hospital = document.getElementById("hospital-select").value;
+            const resultDiv = document.getElementById("resources-result");
+            if (hospital) {
+                resultDiv.textContent = `🏥 Nearby Hospital: ${hospital}`;
+            } else {
+                resultDiv.textContent = "❗ Please select a hospital.";
+            }
+        }
+    </script>
+
+
+    <div class="message" id="resources-result"></div>
+    </section>
+
+
+    <footer>
+        <p>&copy; 2025 Telemedicine Connect. All rights reserved. Developed by Mayuresh</p>
+    </footer>
+
+    <script>
+        const showDashboard = () => {
+            document.querySelector('header').style.display = 'block';
+            document.querySelector('nav').style.display = 'flex';
+            document.querySelector('#diagnosis').style.display = 'block';
+            document.querySelector('#medication').style.display = 'block';
+            document.querySelector('#consultation').style.display = 'block';
+            document.querySelector('#dashboard').style.display = 'block';
+            document.querySelector('#resources').style.display = 'block';
+            document.querySelector('footer').style.display = 'block';
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('signup').style.display = 'none';
+        };
+
+        document.getElementById('toggleToSignup').onclick = () => {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('signup').style.display = 'block';
+        };
+
+        document.getElementById('toggleToLogin').onclick = () => {
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('signup').style.display = 'none';
+        };
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const res = await fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            document.getElementById('register-message').textContent = data.message || 'Registration complete';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const res = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            document.getElementById('login-message').textContent = data.message || 'Login success';
+            if (res.ok && data.message && data.message.toLowerCase().includes('success')) {
+                showDashboard();
+            }
+        });
+
+        async function submitSymptoms() {
+            const symptoms = document.getElementById('illness-input').value;
+            const resultDiv = document.getElementById('ai-result');
+            resultDiv.textContent = "Diagnosing...";
+            try {
+                const res = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ symptoms })
+                });
+                const data = await res.json();
+                resultDiv.textContent = data.prediction || 'No diagnosis found';
+            } catch (err) {
+                resultDiv.textContent = 'Error connecting to diagnosis service';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heart Disease Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f9ff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      padding: 12px;
+      background-color: #008080;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #006666;
+    }
+    .bill {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+    }
+    .payment {
+      margin-top: 20px;
+    }
+    #qrSection {
+      display: none;
+      margin-top: 20px;
+    }
+    #qrSection img {
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Heart Disease Predictor</h2>
+
+    <form id="symptomForm">
+      <h3>Select Your Symptoms (लक्षणे निवडा):</h3>
+
+      <label><input type="checkbox" name="symptoms" value="Chest Pain">Chest Pain (छातीत दुखणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Shortness of Breath">Shortness of Breath (श्वास लागणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Fatigue">Fatigue (थकवा)</label>
+      <label><input type="checkbox" name="symptoms" value="Dizziness">Dizziness (गरगरणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Palpitations">Palpitations (धडधड होणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Fainting">Fainting (बेशुद्ध पडणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Swelling in Legs">Swelling in Legs (पाय सूजणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Nausea">Nausea (उलटी वाटणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Irregular Heartbeat">Irregular Heartbeat (अनियमित हृदयगती)</label>
+      <label><input type="checkbox" name="symptoms" value="Bluish Skin">Bluish Skin (त्वचेला निळसर रंग)</label>
+      
+      <button type="submit">Analyze Heart Disease</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+    <div class="bill" id="bill" style="display: none;"></div>
+
+    <div class="payment" id="payment" style="display: none;">
+      <h4>Pay Hospital Bill</h4>
+      <button onclick="showQR()">Pay ₹500</button>
+    </div>
+
+    <div id="qrSection">
+      <p>Scan the QR code with GPay or any UPI app:</p>
+      <img src='static/qr/hihi.jpg' alt="UPI QR Code">
+      <p><strong>UPI ID:</strong> mayureshsatpute5@oksbi</p>
+      <p><strong>Amount:</strong> ₹500</p>
+    </div>
+
+  </div>
+
+  <script>
+    const diseases = {
+      "Coronary Artery Disease": ["Chest Pain", "Shortness of Breath", "Fatigue"],
+      "Hypertensive Heart Disease": ["Dizziness", "Shortness of Breath", "Chest Pain"],
+      "Arrhythmia": ["Palpitations", "Dizziness", "Fainting"],
+      "Heart Failure": ["Swelling in Legs", "Fatigue", "Shortness of Breath"],
+      "Myocardial Infarction": ["Chest Pain", "Nausea", "Fatigue"],
+      "Atrial Fibrillation": ["Palpitations", "Fatigue", "Shortness of Breath"],
+      "Cardiomyopathy": ["Fatigue", "Shortness of Breath", "Palpitations"],
+      "Congenital Heart Defect": ["Bluish Skin", "Shortness of Breath", "Fatigue"]
+    };
+
+    function showQR() {
+      document.getElementById("qrSection").style.display = 'block';
+    }
+
+    document.getElementById("symptomForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const checked = Array.from(document.querySelectorAll('input[name="symptoms"]:checked')).map(cb => cb.value);
+      let matchedDisease = null;
+
+      for (const [disease, symptoms] of Object.entries(diseases)) {
+        const match = symptoms.every(symptom => checked.includes(symptom));
+        if (match) {
+          matchedDisease = disease;
+          break;
+        }
+      }
+
+      const resultDiv = document.getElementById("result");
+      const billDiv = document.getElementById("bill");
+      const paymentDiv = document.getElementById("payment");
+      const qrSection = document.getElementById("qrSection");
+
+      if (matchedDisease) {
+        resultDiv.innerHTML = `<h3 style="color: red;">⚠️ You may have: ${matchedDisease}</h3>
+          <p>Please consult a cardiologist immediately. You can also book an appointment now.</p>`;
+        
+        billDiv.style.display = 'block';
+        billDiv.innerHTML = `
+          <h4>🏥 Hospital Bill Summary</h4>
+          <p>Disease Suspected: <strong>${matchedDisease}</strong></p>
+          <p>Consultation Fee: ₹300</p>
+          <p>Diagnostic Tests: ₹200</p>
+          <p><strong>Total: ₹500</strong></p>
+        `;
+
+        paymentDiv.style.display = 'block';
+        qrSection.style.display = 'none';
+      } else {
+        resultDiv.innerHTML = `<h3 style="color: green;">✅ No severe heart disease detected based on selected symptoms.</h3>
+        <p>If you're still feeling unwell, please visit a doctor for further diagnosis.</p>`;
+        billDiv.style.display = 'none';
+        paymentDiv.style.display = 'none';
+        qrSection.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

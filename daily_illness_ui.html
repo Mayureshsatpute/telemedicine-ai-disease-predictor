@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heart Disease & Daily Disease Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f9ff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      padding: 12px;
+      background-color: #008080;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #006666;
+    }
+    .bill {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+    }
+    .payment {
+      margin-top: 20px;
+    }
+    #qrSection {
+      display: none;
+      margin-top: 20px;
+    }
+    #qrSection img {
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Daily Disease Predictor (AI-Powered)</h2>
+
+    <form id="symptomForm">
+      <h3>Select Your Symptoms (लक्षणे निवडा):</h3>
+
+      <!-- Extended Daily Symptoms with Marathi -->
+      <label><input type="checkbox" name="symptoms" value="Cold">Cold (सर्दी)</label>
+      <label><input type="checkbox" name="symptoms" value="Cough">Cough (खोकला)</label>
+      <label><input type="checkbox" name="symptoms" value="Headache">Headache (डोकेदुखी)</label>
+      <label><input type="checkbox" name="symptoms" value="Sore Throat">Sore Throat (घसा खवखवणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Body Ache">Body Ache (शरीर दुखणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Fever">Fever (ताप)</label>
+      <label><input type="checkbox" name="symptoms" value="Runny Nose">Runny Nose (नाक वाहणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Fatigue">Fatigue (थकवा)</label>
+      <label><input type="checkbox" name="symptoms" value="Sneezing">Sneezing (शिंकणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Chills">Chills (थंडी वाजणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Muscle Pain">Muscle Pain (स्नायूंमध्ये दुखणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Bloating">Bloating (फुगलेले पोट)</label>
+      <label><input type="checkbox" name="symptoms" value="Nausea">Nausea (मळमळ)</label>
+      <label><input type="checkbox" name="symptoms" value="Loose Stools">Loose Stools (सैल शौच)</label>
+      <label><input type="checkbox" name="symptoms" value="Hard Stools">Hard Stools (कठीण शौच)</label>
+      <label><input type="checkbox" name="symptoms" value="Itching">Itching (खाज येणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Red Eyes">Red Eyes (डोळे लाल होणे)</label>
+      <label><input type="checkbox" name="symptoms" value="Shortness of Breath">Shortness of Breath (श्वास घ्यायला त्रास)</label>
+      <label><input type="checkbox" name="symptoms" value="Wheezing">Wheezing (श्वास घेताना आवाज येणे)</label>
+
+      <button type="submit">Analyze Symptoms</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+    <div class="bill" id="bill" style="display: none;"></div>
+
+    <div class="payment" id="payment" style="display: none;">
+      <h4>Pay Hospital Bill</h4>
+      <button onclick="showQR()">Pay ₹500</button>
+    </div>
+
+    <div id="qrSection">
+      <p>Scan the QR code with GPay or any UPI app:</p>
+      <img src='static/qr/hihi.jpg' alt="UPI QR Code">
+      <p><strong>UPI ID:</strong> mayureshsatpute5@oksbi</p>
+      <p><strong>Amount:</strong> ₹500</p>
+    </div>
+  </div>
+
+  <script>
+    const diseases = {
+      "Common Cold (साधी सर्दी)": ["Cold", "Cough", "Runny Nose", "Sneezing"],
+      "Flu (फ्लू)": ["Fever", "Chills", "Body Ache", "Cough", "Fatigue"],
+      "Fever (सामान्य ताप)": ["Fever", "Chills", "Sweating", "Fatigue"],
+      "Headache / Migraine (डोकेदुखी / मायग्रेन)": ["Headache", "Nausea", "Fatigue"],
+      "Sore Throat / Tonsillitis (घशात दुखणे)": ["Sore Throat", "Cough", "Fever"],
+      "Body Ache / Muscle Pain (सांधे आणि स्नायू दुखणे)": ["Body Ache", "Muscle Pain", "Fatigue"],
+      "Diarrhea (जुलाब)": ["Loose Stools", "Bloating", "Nausea"],
+      "Constipation (बद्धकोष्ठता)": ["Hard Stools", "Bloating"],
+      "Cough (सामान्य खोकला)": ["Cough", "Sore Throat", "Fatigue"],
+      "Allergy (अॅलर्जी)": ["Sneezing", "Runny Nose", "Itching", "Red Eyes"],
+      "Acidity / Indigestion (अम्लपित्त / अपचन)": ["Bloating", "Nausea", "Fatigue"],
+      "Gas Trouble (गॅसचा त्रास)": ["Bloating", "Burping", "Abdominal Pain"],
+      "Skin Infection (त्वचाविकार)": ["Itching", "Redness", "Rash"],
+      "Asthma (दमा)": ["Wheezing", "Shortness of Breath", "Cough"],
+      "Conjunctivitis (डोळ्यांचा संसर्ग)": ["Red Eyes", "Itching", "Watery Discharge"],
+
+      // Existing heart disease entries
+      "Coronary Artery Disease": ["Chest Pain", "Shortness of Breath", "Fatigue"],
+      "Hypertensive Heart Disease": ["Dizziness", "Shortness of Breath", "Chest Pain"],
+      "Arrhythmia": ["Palpitations", "Dizziness", "Fainting"],
+      "Heart Failure": ["Swelling in Legs", "Fatigue", "Shortness of Breath"],
+      "Myocardial Infarction": ["Chest Pain", "Nausea", "Fatigue"],
+      "Atrial Fibrillation": ["Palpitations", "Fatigue", "Shortness of Breath"],
+      "Cardiomyopathy": ["Fatigue", "Shortness of Breath", "Palpitations"],
+      "Congenital Heart Defect": ["Bluish Skin", "Shortness of Breath", "Fatigue"]
+    };
+
+    function showQR() {
+      document.getElementById("qrSection").style.display = 'block';
+    }
+
+    document.getElementById("symptomForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const checked = Array.from(document.querySelectorAll('input[name="symptoms"]:checked')).map(cb => cb.value);
+      let matchedDisease = null;
+
+      for (const [disease, symptoms] of Object.entries(diseases)) {
+        const match = symptoms.every(symptom => checked.includes(symptom));
+        if (match) {
+          matchedDisease = disease;
+          break;
+        }
+      }
+
+      const resultDiv = document.getElementById("result");
+      const billDiv = document.getElementById("bill");
+      const paymentDiv = document.getElementById("payment");
+      const qrSection = document.getElementById("qrSection");
+
+      if (matchedDisease) {
+        resultDiv.innerHTML = `<h3 style="color: red;">⚠ You may have: ${matchedDisease}</h3>
+          <p>Please consult a doctor immediately. You can also book an appointment now.</p>`;
+        
+        billDiv.style.display = 'block';
+        billDiv.innerHTML = `
+          <h4>🏥 Hospital Bill Summary</h4>
+          <p>Disease Suspected: <strong>${matchedDisease}</strong></p>
+          <p>Consultation Fee: ₹300</p>
+          <p>Diagnostic Tests: ₹200</p>
+          <p><strong>Total: ₹500</strong></p>
+        `;
+
+        paymentDiv.style.display = 'block';
+        qrSection.style.display = 'none';
+      } else {
+        resultDiv.innerHTML = `<h3 style="color: green;">✅ No severe disease detected based on selected symptoms.</h3>
+        <p>If you're still feeling unwell, please visit a doctor for further diagnosis.</p>`;
+        billDiv.style.display = 'none';
+        paymentDiv.style.display = 'none';
+        qrSection.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
