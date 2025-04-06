@@ -114,4 +114,8 @@ A comprehensive AI-powered telemedicine platform tailored for underserved commun
 
 **Mayuresh Satpute**  
 **Aakanksha Naiknaware**  
+<<<<<<< HEAD
 `© 2025 Telemedicine Connect. All rights reserved.`
+=======
+`© 2025 Telemedicine Connect. All rights reserved.`
+>>>>>>> f09892294afd512fd477525b582b418e45a2b3f6
